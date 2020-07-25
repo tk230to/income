@@ -1,16 +1,8 @@
 <template>
   <div>
     <header>
-      <div class="indigo p-3">
-        <span class="h2">ロゴ</span>
-
-        <section class="float-right">
-          <span class="h2">画像</span>
-        </section>
-      </div>
-
       <b-navbar toggleable="lg" type="dark" class="indigo" :class="{'fixed-top': scrollY > 100}">
-        <b-navbar-brand to="/">ホーム{{this.getLoginUser}}</b-navbar-brand>
+        <b-navbar-brand to="/">ロゴ</b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -36,7 +28,7 @@
             </b-nav-item>
             <b-nav-item active-class="active" to="/cart">
               <i class="fas fa-shopping-cart"></i>
-              <span class="badge badge-danger rounded-circle ml-1">9</span>
+              <span class="badge badge-danger rounded-circle ml-1">{{this.getCartItemCount}}</span>
             </b-nav-item>
           </b-navbar-nav>
         </b-collapse>
@@ -84,6 +76,9 @@ export default {
   // * メソッド
   // **************************************************************************
   methods: {
+    // ========================================================================
+    // スクロール時処理
+    // ========================================================================
     onScroll() {
       this.scrollY = window.scrollY;
     },
@@ -110,11 +105,25 @@ export default {
   // * 算出プロパティ
   // **************************************************************************
   computed: {
+    // ========================================================================
+    // ログインユーザ情報取得
+    // ========================================================================
     getLoginUser: function() {
       firebase.auth().onAuthStateChanged(user => {
         this.user = user ? user.displayName : "";
       });
       return this.user;
+    },
+
+    // ========================================================================
+    // カート内商品数取得
+    // ========================================================================
+    getCartItemCount: function() {
+      console.log(this.$store.state.cart);
+      for (var item of this.$store.state.cart) {
+        console.log(item.count);
+      }
+      return this.$store.state.cart.length;
     }
   }
 };

@@ -5,10 +5,13 @@ import './plugins/bootstrap-vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+
+// fontawesome
 import '@fortawesome/fontawesome-free/js/fontawesome';
 import '@fortawesome/fontawesome-free/js/solid';
 import '@fortawesome/fontawesome-free/js/regular';
 
+// Firebase
 import firebase from 'firebase/app'
 import 'firebase/app'
 import 'firebase/firestore'
@@ -16,7 +19,7 @@ import 'firebase/auth'
 
 Vue.config.productionTip = false
 
-// Replace the following with your app's Firebase project configuration
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBDWCDPl3Hw8KVJYB4bD1LGodwxSYb1P0A",
   authDomain: "tk-income-360cd.firebaseapp.com",
