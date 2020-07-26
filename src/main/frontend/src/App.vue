@@ -14,13 +14,13 @@
           </b-navbar-nav>
 
           <b-navbar-nav class="ml-auto">
-            <b-nav-item v-if="!this.getLoginUser" href="/signup">
+            <b-nav-item v-if="!this.getLoginUser" to="/signup">
               <i class="fas fa-user-plus"></i>新規登録
             </b-nav-item>
-            <b-nav-item v-if="!this.getLoginUser" href="/login">
+            <b-nav-item v-if="!this.getLoginUser" to="/login">
               <i class="fas fa-sign-in-alt"></i> ログイン
             </b-nav-item>
-            <b-nav-item v-else href="/login" @click="logoff">
+            <b-nav-item v-else @click="logoff">
               <i class="fas fa-sign-out-alt"></i> ログオフ
             </b-nav-item>
             <b-nav-item active-class="active" to="/mypage">
@@ -29,6 +29,9 @@
             <b-nav-item active-class="active" to="/cart">
               <i class="fas fa-shopping-cart"></i>
               <span class="badge badge-danger rounded-circle ml-1">{{this.getCartItemCount}}</span>
+            </b-nav-item>
+            <b-nav-item active-class="active" to="/contact">
+              <i class="fas fa-question-circle"></i> 問合せ
             </b-nav-item>
           </b-navbar-nav>
         </b-collapse>
@@ -44,7 +47,7 @@
         <div class="row d-flex justify-content-between">
           <div>
             <router-link class="text-white p-3" to="/company">会社紹介</router-link>
-            <router-link class="text-white p-3" to="/company">プライバシーポリシー</router-link>
+            <router-link class="text-white p-3" to="/privacy">プライバシーポリシー</router-link>
           </div>
           <div>© 2020 Copyright income.com</div>
         </div>
@@ -88,6 +91,7 @@ export default {
     // ========================================================================
     logoff: function() {
       firebase.auth().signOut();
+      this.$router.push("/login");
     }
   },
 
@@ -110,7 +114,7 @@ export default {
     // ========================================================================
     getLoginUser: function() {
       firebase.auth().onAuthStateChanged(user => {
-        this.user = user ? user.displayName : "";
+        this.user = user ? user : "";
       });
       return this.user;
     },

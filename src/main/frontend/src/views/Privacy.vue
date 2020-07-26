@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <h1>初めての方へ</h1>
+        <h1>プライバシーポリシー</h1>
       </div>
     </div>
   </div>

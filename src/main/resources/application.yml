@@ -18,3 +18,7 @@ spring:
 
       # @Entityに対応するテーブルが無ければ作成
       ddl-auto: update
+
+recaptcha:
+  validation:
+    secret-key: 6LdpQrYZAAAAAOkbIdNvcWb40nVyPYmtPnbv-uU9

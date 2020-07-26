@@ -31,3 +31,5 @@ out/
 ### VS Code ###
 .vscode/
 src/main/resources/static/
+bin/
+src/main/frontend.nuxt/
