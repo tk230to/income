@@ -2,9 +2,9 @@
   <div>
     <header>
       <b-navbar toggleable="lg" type="dark" class="indigo" :class="{'fixed-top': scrollY > 100}">
-        <b-navbar-brand to="/">ロゴ</b-navbar-brand>
-
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+        <b-navbar-brand to="/">ロゴ</b-navbar-brand>
 
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>

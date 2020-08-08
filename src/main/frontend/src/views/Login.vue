@@ -6,7 +6,7 @@
       </tr>
       <tr>
         <td>
-          <input type="email" v-model="mailaddress" />
+          <input type="email" v-model="email" />
         </td>
       </tr>
       <tr>
@@ -25,40 +25,56 @@
 </template>
 
 <script>
+import axios from 'axios';
 import firebase from "firebase/app";
+import { mapActions } from "vuex";
 
 export default {
   data: function() {
     return {
-      mailaddress: "",
+      email: "",
       password: ""
     };
   },
   methods: {
-    login: function() {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(this.mailaddress, this.password)
-        .then(user => {
-          console.log(user.user.email);
-          this.$router.push("/");
-        })
-        .catch(function(error) {
-          alert(error.message);
-        });
+    ...mapActions([
+      "setCustomer",
+    ]),
+    login: async function() {
+      try {
+        // メールアドレスとパスワードを使って認証
+        await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+        await this.setCurrentUser(firebase.auth().currentUser)
+
+        // 認証後のページに遷移
+        this.$router.push('/')
+      } catch (e) {
+        // 認証エラー、トークン取得エラー時
+        console.log(e)
+      }
     },
-    glogin: function() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then(result => {
-          console.log(result.user);
-          this.$router.push("/");
-        })
-        .catch(error => {
-          alert(error.message);
-        });
+
+    glogin: async function() {
+      try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        await firebase.auth().signInWithPopup(provider);
+        await this.setCurrentUser(firebase.auth().currentUser)
+
+        // 認証後のページに遷移
+        this.$router.push('/')
+      } catch (e) {
+        // 認証エラー、トークン取得エラー時
+        console.log(e)
+      }
+    },
+
+    setCurrentUser: async function(currentUser) {
+      var customer
+      await axios.get('/api/open/customers/' + currentUser.email)
+      .then(function (response) {
+        customer = response.data
+      })
+      this.setCustomer(customer)
     }
   }
 };

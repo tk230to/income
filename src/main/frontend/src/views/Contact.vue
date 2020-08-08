@@ -14,10 +14,15 @@
     </div>
 
     <form action="/validate/recaptcha" method="post">
-      <vue-recaptcha sitekey="6LdpQrYZAAAAAIHuGu-9WrE4sAm-1JVXJJDjJfyJ" :loadRecaptchaScript="true"></vue-recaptcha>
+      <vue-recaptcha sitekey="6LdpQrYZAAAAAIHuGu-9WrE4sAm-1JVXJJDjJfyJ" :loadRecaptchaScript="true" @verify="onVerify" @expired="onExpired"></vue-recaptcha>
       <input type="submit" value="検証" />
     </form>
-    <button class="btn btn-primary d-block mx-auto m-2 px-3 py-2" :disabled="!token">送信</button>
+
+    <div class="row">
+      <div class="col">
+        <button class="btn btn-primary d-block mx-auto m-2 px-3 py-2" :disabled="!token">送信</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -31,6 +36,14 @@ export default {
     return {
       token: ""
     };
+  },
+  methods: {
+    onVerify: function (response) {
+      this.token = response
+    },
+    onExpired: function () {
+      this.token = ""
+    },
   }
 };
 </script>

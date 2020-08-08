@@ -8,7 +8,13 @@
 
     <div class="form-group row">
       <div class="form-inline">
-        <label>名前</label>
+        <label>ID：</label>
+        <span>{{this.customer.id}}</span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="form-inline">
+        <label>名前：</label>
         <input class="form-control" type="text" v-model="customer.name" />
       </div>
     </div>
@@ -27,8 +33,7 @@ export default {
   // **************************************************************************
   data: function() {
     return {
-      customer: {
-      }
+      customer: JSON.parse(JSON.stringify(this.$store.state.customer)),
     }
   },
 
@@ -40,7 +45,7 @@ export default {
     // 登録
     // ========================================================================
     create: async function () {
-      await axios.post('/customers', this.customer)
+      await axios.post('/api/open/customers', this.customer)
     },
   }
 };
