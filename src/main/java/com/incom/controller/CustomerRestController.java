@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.incom.model.Customer;
 import com.incom.model.CustomerRepository;
+import com.incom.security.Role;
 
 /**
  * 顧客画面のコントローラクラス。
@@ -46,7 +47,7 @@ public class CustomerRestController {
      */
     @GetMapping(value = "/{id}")
     public ResponseEntity<Customer> getOne(@PathVariable("id") String id) {
-        return ResponseEntity.ok(customerRepository.findById(id).orElse(new Customer(id, null)));
+        return ResponseEntity.ok(customerRepository.findById(id).orElse(new Customer(id, null, Role.ROLE_USER)));
     }
 
     /**

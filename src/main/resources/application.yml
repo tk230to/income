@@ -22,3 +22,12 @@ spring:
 recaptcha:
   validation:
     secret-key: 6LdpQrYZAAAAAOkbIdNvcWb40nVyPYmtPnbv-uU9
+
+firebase:
+  databaseURL: https://tk-income-360cd.firebaseio.com
+  serviceAccount: C:\Users\takafumi\firebase\firebaseServiceAccountKey.json
+
+logging:
+  level:
+    root: DEBUG
+    org.springframework: DEBUG

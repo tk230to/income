@@ -1,9 +1,14 @@
-export default function ({ $axios }) {
-    $axios.onRequest(config => {
-        const token = localStorage.getItem('token');
-        if (token) {
-        // ローカルストレージにトークンがあったら、リクエストヘッダ（Authorization）に付与
-        config.headers.common['Authorization'] = "Bearer " + token;
+import axios from 'axios';
+import store from '../store/index'
+
+export default function setup() {
+    axios.interceptors.request.use(function(config) {
+        const token = store.state.token;
+        if(token) {
+            config.headers.Authorization = `Bearer ${token}`;
         }
-    })
+        return config;
+    }, function(err) {
+        return Promise.reject(err);
+    });
 }

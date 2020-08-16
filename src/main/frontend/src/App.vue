@@ -14,10 +14,10 @@
           </b-navbar-nav>
 
           <b-navbar-nav class="ml-auto">
-            <b-nav-item v-if="!this.getLoginUser" to="/signup">
+            <b-nav-item v-if="!isLogin()" to="/signup">
               <i class="fas fa-user-plus"></i>新規登録
             </b-nav-item>
-            <b-nav-item v-if="!this.getLoginUser" to="/login">
+            <b-nav-item v-if="!isLogin()" to="/login">
               <i class="fas fa-sign-in-alt"></i> ログイン
             </b-nav-item>
             <b-nav-item v-else @click="logoff">
@@ -92,6 +92,13 @@ export default {
     logoff: function() {
       firebase.auth().signOut();
       this.$router.push("/login");
+    },
+
+    // ========================================================================
+    // ログイン有無取得
+    // ========================================================================
+    isLogin: function() {
+      return firebase.auth().currentUser !== null;
     }
   },
 
@@ -100,7 +107,6 @@ export default {
   // **************************************************************************
   data: function() {
     return {
-      user: "",
       scrollY: 0
     };
   },
@@ -110,20 +116,9 @@ export default {
   // **************************************************************************
   computed: {
     // ========================================================================
-    // ログインユーザ情報取得
-    // ========================================================================
-    getLoginUser: function() {
-      firebase.auth().onAuthStateChanged(user => {
-        this.user = user ? user : "";
-      });
-      return this.user;
-    },
-
-    // ========================================================================
     // カート内商品数取得
     // ========================================================================
     getCartItemCount: function() {
-      console.log(this.$store.state.cart);
       for (var item of this.$store.state.cart) {
         console.log(item.count);
       }

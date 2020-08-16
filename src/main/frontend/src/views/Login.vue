@@ -38,6 +38,7 @@ export default {
   },
   methods: {
     ...mapActions([
+      "setToken",
       "setCustomer",
     ]),
     login: async function() {
@@ -70,6 +71,9 @@ export default {
 
     setCurrentUser: async function(currentUser) {
       var customer
+      console.log(currentUser)
+      const token = await firebase.auth().currentUser.getIdToken(true)
+      this.setToken(token)
       await axios.get('/api/open/customers/' + currentUser.email)
       .then(function (response) {
         customer = response.data

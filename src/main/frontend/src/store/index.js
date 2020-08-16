@@ -6,9 +6,13 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     customer: {},
-    cart: []
+    cart: [],
+    token: ""
   },
   mutations: {
+    setToken(state, payload) {
+      state.token = payload
+    },
     setCustomer(state, payload) {
       state.customer = payload
     },
@@ -20,6 +24,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    setToken({commit}, payload) {
+      commit('setToken', payload)
+    },
     setCustomer({commit}, payload) {
       commit('setCustomer', payload)
     },

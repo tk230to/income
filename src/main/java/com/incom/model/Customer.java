@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
+import com.incom.security.Role;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,4 +26,7 @@ public class Customer {
     /** 名前 */
     @NotBlank
     private String name;
+
+    /** 権限 */
+    private Role role = Role.ROLE_USER;
 }
