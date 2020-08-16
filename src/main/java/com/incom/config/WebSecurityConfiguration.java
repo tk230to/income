@@ -37,13 +37,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
-        httpSecurity.authorizeRequests().antMatchers("/api/open/**").hasAnyRole(Role.ANONYMOUS, Role.USER, Role.ADMIN);
+        httpSecurity.authorizeRequests().antMatchers("/api/open/**").hasAnyRole(Role.USER, Role.ADMIN);
         httpSecurity.authorizeRequests().antMatchers("/api/client/**").hasRole(Role.USER);
         httpSecurity.authorizeRequests().antMatchers("/api/admin/**").hasAnyRole(Role.ADMIN);
         httpSecurity.authorizeRequests().antMatchers("/health/**").hasAnyRole(Role.ADMIN);
         httpSecurity.authorizeRequests().antMatchers("/**").permitAll();
         httpSecurity.authorizeRequests().and().csrf().disable();
-        httpSecurity.authorizeRequests().and().anonymous().authorities(Role.ANONYMOUS);//
 
         // Firebase認証フィルタを登録
         httpSecurity.addFilterBefore(firebaseAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
