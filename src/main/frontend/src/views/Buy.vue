@@ -26,42 +26,19 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
+  mounted: function() {
+    this.getItems()
+  },
+
   // **************************************************************************
   // * データ
   // **************************************************************************
   data: function() {
     return {
-      items: [
-        {
-          name: "GDR4800",
-          maker: "MOTOROLA",
-          imgSrc:
-            "https://www.incom-rental.com/incom/manual/images/manual_incom_img01.png",
-          price: 1000,
-          text:
-            "人気No.1の定番モデル。「使いやすさ」を徹底的に追求した、弊社おすすめのハイパワー無線機。",
-          count: 1
-        },
-        {
-          name: "IC-D60",
-          maker: "ICOM",
-          imgSrc:
-            "https://www.incom-rental.com/incom/incom/images/incom_img02.png",
-          price: 1000,
-          text: "根強い人気を誇る機種。あらゆる現場でのご利用が可能です。",
-          count: 1
-        },
-        {
-          name: "IP500H",
-          maker: "ICOM",
-          imgSrc:
-            "https://www.incom-rental.com/incom/ip/images/incom_img01.png",
-          price: 1000,
-          text: "auの4G LTEを使用することで日本全国で使用することを可能。",
-          count: 1
-        }
-      ]
+      items: []
     };
   },
 
@@ -74,6 +51,18 @@ export default {
     // ========================================================================
     addCart(item) {
       this.$store.commit("addCart", JSON.parse(JSON.stringify(item)));
+    },
+    
+    // ========================================================================
+    // 商品取得
+    // ========================================================================
+    getItems: async function() {
+      let items
+      await axios.get('/api/open/items/')
+      .then(function (response) {
+        items = response.data
+      })
+      this.items = items
     }
   }
 };

@@ -2,13 +2,21 @@ import axios from 'axios';
 import store from '../store/index'
 
 export default function setup() {
-    axios.interceptors.request.use(function(config) {
-        const token = store.state.token;
-        if(token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    }, function(err) {
-        return Promise.reject(err);
-    });
+
+  axios.interceptors.request.use(
+
+    request => {
+      const token = store.state.token;
+      if(token) {
+        request.headers.Authorization = `Bearer ${token}`;
+      }
+      return request;
+    },
+
+    error => {
+      return Promise.reject(error);
+    }
+  );
+
+  axios.defaults.baseURL = "http://localhost:8080"
 }

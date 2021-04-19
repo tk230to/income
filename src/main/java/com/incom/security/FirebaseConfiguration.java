@@ -58,6 +58,8 @@ public class FirebaseConfiguration {
                 .setDatabaseUrl(databaseURL)
                 .build();
 
-        FirebaseApp.initializeApp(options);
+        if (FirebaseApp.getApps().size() == 0) {
+            FirebaseApp.initializeApp(options);
+        }
     }
 }

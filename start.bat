@@ -1,2 +1,2 @@
 cd E:\workspace\incom
-gradlew bootRun
+gradlew.bat bootRun

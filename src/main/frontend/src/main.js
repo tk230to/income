@@ -6,6 +6,7 @@ import './plugins/bootstrap-vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import util from './mixin/util'
 
 axios()
 
@@ -36,6 +37,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
+// Mixin
+Vue.mixin(util)
 
 new Vue({
   router,

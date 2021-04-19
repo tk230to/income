@@ -1,6 +1,7 @@
 package com.incom.model;
 
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
@@ -28,5 +29,6 @@ public class Customer {
     private String name;
 
     /** 権限 */
+    @Enumerated
     private Role role = Role.ROLE_USER;
 }

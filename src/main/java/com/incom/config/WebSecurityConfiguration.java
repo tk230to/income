@@ -1,6 +1,8 @@
 package com.incom.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,6 +10,9 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.incom.security.FirebaseAuthenticationFilter;
 import com.incom.security.Role;
@@ -23,6 +28,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private FirebaseAuthenticationFilter firebaseAuthenticationFilter;
 
+    @Value(value = "${app.allowedOrigin}")
+    private String allowedOrigin;
+
     @Override
     public void configure(WebSecurity web) throws Exception {
 
@@ -37,7 +45,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
-        httpSecurity.authorizeRequests().antMatchers("/api/open/**").hasAnyRole(Role.USER, Role.ADMIN);
+        httpSecurity.authorizeRequests().antMatchers("/api/open/**").permitAll();
         httpSecurity.authorizeRequests().antMatchers("/api/client/**").hasRole(Role.USER);
         httpSecurity.authorizeRequests().antMatchers("/api/admin/**").hasAnyRole(Role.ADMIN);
         httpSecurity.authorizeRequests().antMatchers("/health/**").hasAnyRole(Role.ADMIN);
@@ -46,5 +54,27 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         // Firebase認証フィルタを登録
         httpSecurity.addFilterBefore(firebaseAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // CORS
+        httpSecurity.cors();
+    }
+
+    /**
+     * CORS設定
+     *
+     * @return CORS設定
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
+        corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
+        corsConfiguration.addAllowedOrigin(allowedOrigin);
+
+        UrlBasedCorsConfigurationSource corsSource = new UrlBasedCorsConfigurationSource();
+        corsSource.registerCorsConfiguration("/**", corsConfiguration);
+
+        return corsSource;
     }
 }

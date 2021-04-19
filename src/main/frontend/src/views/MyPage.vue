@@ -33,7 +33,7 @@ export default {
   // **************************************************************************
   data: function() {
     return {
-      customer: JSON.parse(JSON.stringify(this.$store.state.customer)),
+      customer: this.$store.state.customer,
     }
   },
 

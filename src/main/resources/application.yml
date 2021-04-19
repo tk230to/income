@@ -17,7 +17,7 @@ spring:
     hibernate:
 
       # @Entityに対応するテーブルが無ければ作成
-      ddl-auto: update
+      ddl-auto: create-drop
 
 recaptcha:
   validation:
@@ -25,9 +25,12 @@ recaptcha:
 
 firebase:
   databaseURL: https://tk-income-360cd.firebaseio.com
-  serviceAccount: C:\Users\takafumi\firebase\firebaseServiceAccountKey.json
+  serviceAccount: C:\Users\tk_23\firebase\firebaseServiceAccountKey.json
 
 logging:
   level:
-    root: DEBUG
-    org.springframework: DEBUG
+    root: INFO
+    org.springframework: INFO
+
+app:
+  allowedOrigin: http://localhost:8081
