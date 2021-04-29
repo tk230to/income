@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <h1>ホーム</h1>
+
     <b-carousel
       id="carousel-fade"
       style="text-shadow: 0px 0px 2px #000"

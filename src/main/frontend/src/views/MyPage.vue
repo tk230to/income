@@ -1,25 +1,25 @@
 <template>
-  <div class="container container-fluid">
-    <div class="row">
-      <div class="col">
-        <h1>マイページ</h1>
+  <div class="container">
+    <h1>マイページ</h1>
+
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label">ユーザ名 <span class="badge badge-danger">必須</span></label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" :class="{ 'is-invalid' : getErrorMessage('name') }" v-model="customer.name">
+        <div :class="{ 'invalid-feedback' : getErrorMessage('name') }">{{getErrorMessage('name')}}</div>
       </div>
     </div>
 
     <div class="form-group row">
-      <div class="form-inline">
-        <label>ID：</label>
-        <span>{{this.customer.id}}</span>
+      <label class="col-sm-2 col-form-label">メールアドレス <span class="badge badge-danger">必須</span></label>
+      <div class="col-sm-10">
+        <input type="email" class="form-control" :class="{ 'is-invalid' : getErrorMessage('email') }" v-model="customer.email">
+        <div :class="{ 'invalid-feedback' : getErrorMessage('email') }">{{getErrorMessage('email')}}</div>
       </div>
     </div>
-    <div class="form-group row">
-      <div class="form-inline">
-        <label>名前：</label>
-        <input class="form-control" type="text" v-model="customer.name" />
-      </div>
-    </div>
+
     <div class="row">
-      <button @click="create()" class="btn btn-primary d-block mx-auto m-2 px-3 py-2">登録</button>
+      <button @click="update()" class="btn btn-primary d-block mx-auto m-2 px-3 py-2">更新</button>
     </div>
   </div>
 </template>
@@ -28,6 +28,7 @@
 import axios from 'axios';
 
 export default {
+
   // **************************************************************************
   // * データ
   // **************************************************************************
@@ -41,11 +42,20 @@ export default {
   // * メソッド
   // **************************************************************************
   methods: {
+
     // ========================================================================
-    // 登録
+    // 更新
     // ========================================================================
-    create: async function () {
-      await axios.post('/api/open/customers', this.customer)
+    update: async function () {
+      await axios.put('/api/open/customers/' + this.customer.id, this.customer)
+      .then(response => {
+          console.log(response)
+          this.$router.push('/')
+        })
+
+        .catch(error => {
+          this.errors = error.response.data.errors
+        })
     },
   }
 };

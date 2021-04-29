@@ -47,7 +47,8 @@ public class CustomerRestController {
      */
     @GetMapping(value = "/{id}")
     public ResponseEntity<Customer> getOne(@PathVariable("id") String id) {
-        return ResponseEntity.ok(customerRepository.findById(id).orElse(new Customer(id, null, Role.ROLE_USER)));
+        return ResponseEntity
+                .ok(customerRepository.findById(id).orElse(new Customer(id, null, null, Role.ROLE_USER, null)));
     }
 
     /**
@@ -59,6 +60,17 @@ public class CustomerRestController {
     @PostMapping
     public ResponseEntity<Customer> create(@Validated @RequestBody Customer customer) {
         customerRepository.save(customer);
+        return ResponseEntity.ok(customer);
+    }
+
+    /**
+     * 登録。
+     *
+     * @param customer 顧客画面入力値
+     * @return 顧客情報
+     */
+    @PostMapping("/validate")
+    public ResponseEntity<Customer> validate(@Validated @RequestBody Customer customer) {
         return ResponseEntity.ok(customer);
     }
 

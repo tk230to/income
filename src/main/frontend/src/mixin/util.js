@@ -1,16 +1,33 @@
+import axios from 'axios';
+import firebase from "firebase/app";
+import { mapActions } from "vuex";
+
 export default {
+
+  // **************************************************************************
+  // * データ
+  // **************************************************************************
+  data: function() {
+    return {
+      customer: this.$store.state.customer,
+    }
+  },
 
   // **************************************************************************
   // * メソッド
   // **************************************************************************
   methods: {
+    ...mapActions([
+      "getCustomer",
+      "setCustomer",
+    ]),
 
     // ========================================================================
     // Base64デコード
     // ========================================================================
     base64Encode: function(...parts) {
 
-      if (!file) {
+      if (!parts) {
         return null
       }
 
@@ -29,6 +46,51 @@ export default {
     // ========================================================================
     base64DecodeAsBlob: function (text, type = "text/plain;charset=UTF-8") {
       return fetch(`data:${type};base64,` + text).then(response => response.blob());
+    },
+
+    // ========================================================================
+    // エラーメッセージ取得
+    // ========================================================================
+    getErrorMessage: function(fieldName) {
+
+      // エラーが無い場合
+      if (!this.errors) {
+        return ""
+      }
+
+      for (let error of this.errors) {
+        if (error.field === fieldName) {
+          return error.defaultMessage
+        }
+      }
+    },
+
+    // ========================================================================
+    // ユーザ取得
+    // ========================================================================
+    getCurrentCustomer: async function() {
+
+      let customer
+      let id
+      if (firebase.auth().currentUser) {
+        id = firebase.auth().currentUser.uid
+      }
+      await axios.get('/api/open/customers/' + id)
+      .then(function (response) {
+        customer = response.data
+      })
+      this.customer = customer
+
+      // 画像をBase64デコード
+      for (let cartItem of customer.cartItems) {
+        cartItem.item.image = await this.base64DecodeAsBlob(cartItem.item.image, cartItem.item.imageType)
+      }
+
+      if (firebase.auth().currentUser) {
+        customer.token = await firebase.auth().currentUser.getIdToken(true)
+      }
+      this.setCustomer(customer)
+      return customer
     },
   }
 }

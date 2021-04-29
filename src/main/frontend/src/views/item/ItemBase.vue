@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <h1>{{ title }}</h1>
 
     <div class="form-group row">
@@ -19,7 +19,7 @@
     <div class="form-group row">
       <label class="col-sm-2 col-form-label">画像 <span class="badge badge-danger">必須</span></label>
       <div class="col-sm-10 bg-light" @drop.prevent="dropImage($event)">
-        <input type="file" class="w-100 position-absolute" style="opacity: 0" @change="changeImage($event)" :class="{ 'is-invalid' : getErrorMessage('image') }">
+        <input type="file" class="w-100 h-100 position-absolute" style="opacity: 0" @change="changeImage($event)" :class="{ 'is-invalid' : getErrorMessage('image') }">
 
         <p>クリックでファイル選択</p>
         <p>または画像をドラッグ＆ドロップ</p>
@@ -37,16 +37,16 @@
 
 export default {
 
-    // **************************************************************************
-    // * データ
-    // **************************************************************************
-    data: function() {
-      return {
-        file: {
-          name: null
-        },
-      }
-    },
+  // **************************************************************************
+  // * データ
+  // **************************************************************************
+  data: function() {
+    return {
+      file: {
+        name: null
+      },
+    }
+  },
 
   // **************************************************************************
   // * 引数
@@ -61,23 +61,6 @@ export default {
   // * メソッド
   // **************************************************************************
   methods: {
-
-    // ========================================================================
-    // エラーメッセージ取得
-    // ========================================================================
-    getErrorMessage: function(fieldName) {
-
-      // エラーが無い場合
-      if (!this.errors) {
-        return ""
-      }
-
-      for (let error of this.errors) {
-        if (error.field === fieldName) {
-          return error.defaultMessage
-        }
-      }
-    },
 
     // ========================================================================
     // 画像ファイルドラッグ＆ドロップ

@@ -92,6 +92,8 @@ export default {
     // ========================================================================
     logoff: function() {
       firebase.auth().signOut();
+      let customer = {}
+      this.setCustomer(customer)
       this.$router.push("/login");
     },
 
@@ -131,10 +133,10 @@ export default {
     // カート内商品数取得
     // ========================================================================
     getCartItemCount: function() {
-      for (var item of this.$store.state.cart) {
-        console.log(item.count);
+      if (this.$store.state.customer.cartItems) {
+        return this.$store.state.customer.cartItems.length;
       }
-      return this.$store.state.cart.length;
+      return 0
     }
   }
 };

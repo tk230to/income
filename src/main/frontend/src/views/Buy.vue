@@ -1,25 +1,22 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col">
-        <h1>購入</h1>
-      </div>
-    </div>
+    <h1>購入</h1>
 
     <div class="form-group row">
-      <div v-for="(item, index) in items" class="col-lg-4 col-md-6" :key="index">
-        <h2 class="text-center">{{item.name}}</h2>
-        <div class="h-25">
-          <img class="d-block mx-auto h-100 w-auto" style="object-fit: cover;" :src="item.imgSrc" />
+      <div v-for="(cartItem, index) in cartItems" class="col-lg-4 col-md-6" :key="index">
+
+        <div class="card" style="width: 18rem;">
+          <img :src="getImageSrc(cartItem.item.image)">
+          <div class="card-body">
+            <h5 class="card-title">{{cartItem.item.name}}</h5>
+            <p class="card-text">￥{{cartItem.item.price.toLocaleString()}}</p>
+            <div class="form-inline">
+              <label>数量</label>
+              <input class="form-control" type="number" v-model.number="cartItem.quantity" />
+            </div>
+            <button @click="addCart(cartItem)" class="btn btn-primary d-block mx-auto m-2 px-3 py-2">カートに入れる</button>
+          </div>
         </div>
-        <p class="text-center text-secondary">{{item.maker}}</p>
-        <div class="text-wrap" style="height: 15%">{{item.text}}</div>
-        <p>￥{{item.price.toLocaleString()}}</p>
-        <div class="form-inline">
-          <label>数量</label>
-          <input class="form-control" type="number" v-model="item.count" />
-        </div>
-        <button @click="addCart(item)" class="btn btn-primary d-block mx-auto m-2 px-3 py-2">カートに入れる</button>
       </div>
     </div>
   </div>
@@ -31,6 +28,7 @@ import axios from 'axios';
 export default {
   mounted: function() {
     this.getItems()
+    this.getCurrentCustomer()
   },
 
   // **************************************************************************
@@ -38,7 +36,9 @@ export default {
   // **************************************************************************
   data: function() {
     return {
-      items: []
+      customer: this.$store.state.customer,
+      items: [],
+      cartItems: [],
     };
   },
 
@@ -46,13 +46,41 @@ export default {
   // * メソッド
   // **************************************************************************
   methods: {
+
     // ========================================================================
     // カートに追加処理
     // ========================================================================
-    addCart(item) {
-      this.$store.commit("addCart", JSON.parse(JSON.stringify(item)));
+    addCart: async function(addCartItem) {
+
+      this.mergeCart(addCartItem)
+
+      // HTTPリクエスト送信
+      let customer = JSON.parse(JSON.stringify(this.customer))
+      for (let cartItem of customer.cartItems) {
+        cartItem.item.image = ""
+      }
+      await axios.post('/api/open/customers/', customer)
+      .then(response => {
+        console.log(response)
+      })
+
+      this.getCurrentCustomer()
     },
-    
+
+    // ========================================================================
+    // カート内の同じ商品をマージ
+    // ========================================================================
+    mergeCart: function(addCartItem) {
+      for (let cartItem of this.customer.cartItems) {
+        if (cartItem.item.id === addCartItem.item.id) {
+          cartItem.quantity += addCartItem.quantity
+          return
+        }
+      }
+      console.log(JSON.stringify(addCartItem))
+      this.customer.cartItems.push(addCartItem);
+    },
+
     // ========================================================================
     // 商品取得
     // ========================================================================
@@ -63,7 +91,38 @@ export default {
         items = response.data
       })
       this.items = items
+
+      for (let item of this.items) {
+
+        // 画像をBase64デコード
+        item.image = await this.base64DecodeAsBlob(item.image, item.imageType)
+
+        // カート用に変換
+        let cartItem = {}
+        cartItem.item = item
+        cartItem.quantity = 0
+        this.cartItems.push(cartItem)
+      }
+    },
+
+    // ========================================================================
+    // 画像ファイルソース取得
+    // ========================================================================
+    getImageSrc: function(image) {
+
+      if (!image || !image.type) {
+        return ""
+      }
+
+      return URL.createObjectURL(image)
     }
   }
 };
 </script>
+<style>
+img {
+  width: 17rem;
+  height: 17rem;
+  object-fit: contain;
+}
+</style>

@@ -1,10 +1,6 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col">
-        <h1>問合せ</h1>
-      </div>
-    </div>
+    <h1>問合せ</h1>
 
     <div class="form-group row">
       <label for="mail">メールアドレス</label>

@@ -1,17 +1,24 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col">
-        <h1>カート</h1>
-        <h2>小計: {{ subtotalPrice }}</h2>
+    <h1>カート</h1>
 
-        <div v-for="(item, index) in this.cart" :key="index">
-          <p>{{item.name}}</p>
-          <div class="form-inline">
-            <label>数量</label>
-            <input class="form-control" type="number" v-model="item.count" />
+    <div class="row">
+      <h2>小計: {{ subtotalPrice }}</h2>
+    </div>
+
+    <div class="form-group row">
+      <div v-for="(cartItem, index) in this.customer.cartItems" class="col-lg-4 col-md-6" :key="index">
+        <div class="card" style="width: 18rem;">
+          <img :src="getImageSrc(cartItem.item.image)">
+          <div class="card-body">
+            <h5 class="card-title">{{cartItem.item.name}}</h5>
+            <p class="card-text">￥{{cartItem.item.price.toLocaleString()}}</p>
+            <div class="form-inline">
+              <label>数量</label>
+              <input class="form-control" type="number" v-model.number="cartItem.quantity" />
+            </div>
+            <button @click="deleteItem(index)" class="btn btn-secondary d-block mx-auto m-2 px-3 py-2">削除</button>
           </div>
-          <button @click="deleteItem(index)" class="btn btn-secondary">削除</button>
         </div>
       </div>
     </div>
@@ -19,13 +26,16 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
+
   // **************************************************************************
   // * データ
   // **************************************************************************
   data: function() {
     return {
-      cart: this.$store.state.cart,
+      customer: this.$store.state.customer,
     }
   },
 
@@ -35,8 +45,10 @@ export default {
   computed: {
     subtotalPrice: function() {
       let subtotal = 0
-      for (let item of this.cart) {
-        subtotal = subtotal + item.price * item.count
+      if (this.customer.cartItems) {
+        for (let cartItem of this.customer.cartItems) {
+          subtotal = subtotal + cartItem.item.price * cartItem.quantity
+        }
       }
       return subtotal
     },
@@ -46,9 +58,41 @@ export default {
   // * メソッド
   // **************************************************************************
   methods: {
-    deleteItem: function(index) {
-      this.cart.splice(index, 1)
+
+    // ========================================================================
+    // カート商品削除
+    // ========================================================================
+    deleteItem: async function(index) {
+      console.log(JSON.stringify(this.customer.cartItems))
+      await axios.delete('/api/open/cartitems/' + this.customer.cartItems[index].id)
+      .then(response => {
+        console.log(response)
+        this.getCurrentCustomer()
+      })
+
+      .catch(error => {
+        this.errors = error.response.data.errors
+      })
+    },
+
+    // ========================================================================
+    // 画像ファイルソース取得
+    // ========================================================================
+    getImageSrc: function(image) {
+
+      if (!image || !image.type) {
+        return ""
+      }
+
+      return URL.createObjectURL(image)
     }
   }
 };
 </script>
+<style>
+img {
+  width: 17rem;
+  height: 17rem;
+  object-fit: contain;
+}
+</style>

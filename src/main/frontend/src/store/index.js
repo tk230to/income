@@ -4,36 +4,44 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+
+  // **************************************************************************
+  // * データ
+  // **************************************************************************
   state: {
+
+    // 顧客
     customer: {},
-    cart: [],
-    token: ""
   },
+
+  // **************************************************************************
+  // * mutations
+  // **************************************************************************
   mutations: {
-    setToken(state, payload) {
-      state.token = payload
+
+    setCustomer(state, customer) {
+      state.customer = customer
     },
-    setCustomer(state, payload) {
-      state.customer = payload
-    },
+
     getCustomer(state) {
       return state.customer
     },
-    addCart(state, payload) {
-      state.cart.push(payload);
-    }
   },
+
+  // **************************************************************************
+  // * actions
+  // **************************************************************************
   actions: {
-    setToken({commit}, payload) {
-      commit('setToken', payload)
+
+    setCustomer({commit}, customer) {
+      commit('setCustomer', customer)
     },
-    setCustomer({commit}, payload) {
-      commit('setCustomer', payload)
-    },
+
     getCustomer({commit}) {
       commit('getCustomer')
     }
   },
+
   modules: {
   }
 })

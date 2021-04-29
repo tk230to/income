@@ -99,22 +99,31 @@ const router = new VueRouter({
   routes
 })
 
+// ========================================================================
+// 画面遷移前処理
+// ========================================================================
 router.beforeEach((to, from, next) => {
+
+  // 認証要否取得
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  if (requiresAuth) {
-    firebase.auth().onAuthStateChanged(function (user) {
-      if (user) {
-        next()
-      } else {
-        next({
-          path: '/login',
-          query: { redirect: to.fullPath }
-        })
-      }
-    })
-  } else {
+
+  // 認証不要の場合
+  if (!requiresAuth) {
     next()
+    return
   }
+
+  // 認証要の場合
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      next()
+    } else {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    }
+  })
 })
 
 export default router
