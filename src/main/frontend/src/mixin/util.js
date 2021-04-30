@@ -23,29 +23,15 @@ export default {
   methods: {
 
     // ========================================================================
-    // Base64デコード
+    // 画像ファイルソース取得
     // ========================================================================
-    base64Encode: function(...parts) {
+    getImageSrc: function(image) {
 
-      if (!parts) {
-        return null
+      if (!image || !image.type) {
+        return ""
       }
 
-      return new Promise(resolve => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const offset = reader.result.indexOf(",") + 1;
-          resolve(reader.result.slice(offset));
-        };
-        reader.readAsDataURL(new Blob(parts));
-      });
-    },
-
-    // ========================================================================
-    // Base64デコード
-    // ========================================================================
-    base64DecodeAsBlob: function (text, type = "text/plain;charset=UTF-8") {
-      return fetch(`data:${type};base64,` + text).then(response => response.blob());
+      return URL.createObjectURL(image)
     },
 
     // ========================================================================
@@ -81,16 +67,10 @@ export default {
       })
       this.customer = customer
 
-      // 画像をBase64デコード
-      for (let cartItem of customer.cartItems) {
-        cartItem.item.image = await this.base64DecodeAsBlob(cartItem.item.image, cartItem.item.imageType)
-      }
-
       if (firebase.auth().currentUser) {
-        customer.token = await firebase.auth().currentUser.getIdToken(true)
+        this.customer.token = await firebase.auth().currentUser.getIdToken(true)
       }
-      this.customer = customer
-      return customer
+      return this.customer
     },
   }
 }

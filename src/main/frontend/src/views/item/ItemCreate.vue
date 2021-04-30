@@ -46,9 +46,6 @@ export default {
     // ========================================================================
     createItem: async function() {
 
-      // 画像をBase64エンコード
-      this.item.image = await this.base64Encode(this.item.image)
-
       // HTTPリクエスト送信
       await axios.post('/api/open/items/', this.item)
       .then(response => {

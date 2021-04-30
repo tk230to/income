@@ -67,7 +67,6 @@ export default {
     // カート商品削除
     // ========================================================================
     deleteItem: async function(index) {
-      console.log(JSON.stringify(this.customer.cartItems))
       await axios.delete('/api/open/cartitems/' + this.customer.cartItems[index].id)
       .then(response => {
         console.log(response)
@@ -78,18 +77,6 @@ export default {
         this.errors = error.response.data.errors
       })
     },
-
-    // ========================================================================
-    // 画像ファイルソース取得
-    // ========================================================================
-    getImageSrc: function(image) {
-
-      if (!image || !image.type) {
-        return ""
-      }
-
-      return URL.createObjectURL(image)
-    }
   }
 };
 </script>

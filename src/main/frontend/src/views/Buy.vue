@@ -70,16 +70,18 @@ export default {
 
       this.mergeCart(addCartItem)
 
-      // HTTPリクエスト送信
+      // TODO 画像がいつの間にかBLOBになってしまうため除去
       let customer = JSON.parse(JSON.stringify(this.customer))
       for (let cartItem of customer.cartItems) {
         cartItem.item.image = ""
       }
+
+      // HTTPリクエスト送信
       await axios.post('/api/open/customers/', customer)
       .then(response => {
-        this.customer = response.data
+        console.log(response)
+        this.getCurrentCustomer()
       })
-      this.getCurrentCustomer()
     },
 
     // ========================================================================
@@ -108,27 +110,12 @@ export default {
 
       for (let item of items) {
 
-        // 画像をBase64デコード
-        item.image = await this.base64DecodeAsBlob(item.image, item.imageType)
-
         // カート用に変換
         let cartItem = {}
         cartItem.item = item
         cartItem.quantity = 0
         this.cartItems.push(cartItem)
       }
-    },
-
-    // ========================================================================
-    // 画像ファイルソース取得
-    // ========================================================================
-    getImageSrc: function(image) {
-
-      if (!image || !image.type) {
-        return ""
-      }
-
-      return URL.createObjectURL(image)
     },
   },
 };

@@ -23,7 +23,7 @@
 
         <p>クリックでファイル選択</p>
         <p>または画像をドラッグ＆ドロップ</p>
-        <img v-show="getImageSrc()" :src="getImageSrc()" class="w-25">
+        <img v-show="getImageSrc(item.image)" :src="getImageSrc(item.image)" class="w-25">
         <p v-show="file.name"> {{file.name}} </p>
 
         <div :class="{ 'invalid-feedback' : getErrorMessage('image') }">{{getErrorMessage('image')}}</div>
@@ -91,19 +91,6 @@ export default {
       this.item.image = file
       this.item.imageType = file.type
     },
-
-    // ========================================================================
-    // 画像ファイルソース取得
-    // ========================================================================
-    getImageSrc: function() {
-
-      // 未選択 or 画像のBase64デコードが未完了の場合
-      if (!this.item.image || !this.item.image.type) {
-        return ""
-      }
-
-      return URL.createObjectURL(this.item.image)
-    }
   }
 };
 </script>

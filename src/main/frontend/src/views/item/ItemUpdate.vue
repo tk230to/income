@@ -60,9 +60,6 @@ export default {
         item = response.data
       })
 
-      // 画像をBase64デコード
-      item.image = await this.base64DecodeAsBlob(item.image, item.imageType)
-
       this.item = item
     },
 
@@ -71,7 +68,7 @@ export default {
     // ========================================================================
     updateItem: async function() {
 
-      this.item.image = await this.base64Encode(this.item.image)
+      // HTTPリクエスト送信
       await axios.put('/api/open/items/' + this.item.id, this.item)
       .then(response => {
         console.log(response)
