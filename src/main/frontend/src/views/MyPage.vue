@@ -30,12 +30,21 @@ import axios from 'axios';
 export default {
 
   // **************************************************************************
-  // * データ
+  // * 算出プロパティ
   // **************************************************************************
-  data: function() {
-    return {
-      customer: this.$store.state.customer,
-    }
+  computed: {
+
+    // ========================================================================
+    // 顧客
+    // ========================================================================
+    customer: {
+      get () {
+        return this.$store.state.customer
+      },
+      set (value) {
+        this.$store.commit('setCustomer', value)
+      }
+    },
   },
 
   // **************************************************************************
@@ -49,13 +58,13 @@ export default {
     update: async function () {
       await axios.put('/api/open/customers/' + this.customer.id, this.customer)
       .then(response => {
-          console.log(response)
-          this.$router.push('/')
-        })
+        console.log(response)
+        this.$router.push('/')
+      })
 
-        .catch(error => {
-          this.errors = error.response.data.errors
-        })
+      .catch(error => {
+        this.errors = error.response.data.errors
+      })
     },
   }
 };

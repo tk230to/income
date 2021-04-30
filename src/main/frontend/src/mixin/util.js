@@ -1,26 +1,26 @@
 import axios from 'axios';
 import firebase from "firebase/app";
-import { mapActions } from "vuex";
 
 export default {
 
   // **************************************************************************
-  // * データ
+  // * 算出プロパティ
   // **************************************************************************
-  data: function() {
-    return {
-      customer: this.$store.state.customer,
-    }
+  computed: {
+    customer: {
+      get () {
+        return this.$store.state.customer
+      },
+      set (value) {
+        this.$store.commit('setCustomer', value)
+      }
+    },
   },
 
   // **************************************************************************
   // * メソッド
   // **************************************************************************
   methods: {
-    ...mapActions([
-      "getCustomer",
-      "setCustomer",
-    ]),
 
     // ========================================================================
     // Base64デコード
@@ -89,7 +89,7 @@ export default {
       if (firebase.auth().currentUser) {
         customer.token = await firebase.auth().currentUser.getIdToken(true)
       }
-      this.setCustomer(customer)
+      this.customer = customer
       return customer
     },
   }

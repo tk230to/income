@@ -36,10 +36,26 @@ export default {
   // **************************************************************************
   data: function() {
     return {
-      customer: this.$store.state.customer,
-      items: [],
       cartItems: [],
     };
+  },
+
+  // **************************************************************************
+  // * 算出プロパティ
+  // **************************************************************************
+  computed: {
+
+    // ========================================================================
+    // 顧客
+    // ========================================================================
+    customer: {
+      get () {
+        return this.$store.state.customer
+      },
+      set (value) {
+        this.$store.commit('setCustomer', value)
+      }
+    },
   },
 
   // **************************************************************************
@@ -61,9 +77,8 @@ export default {
       }
       await axios.post('/api/open/customers/', customer)
       .then(response => {
-        console.log(response)
+        this.customer = response.data
       })
-
       this.getCurrentCustomer()
     },
 
@@ -71,13 +86,13 @@ export default {
     // カート内の同じ商品をマージ
     // ========================================================================
     mergeCart: function(addCartItem) {
-      for (let cartItem of this.customer.cartItems) {
-        if (cartItem.item.id === addCartItem.item.id) {
-          cartItem.quantity += addCartItem.quantity
-          return
-        }
+
+      let cartItem = this.customer.cartItems.find((cartItem) => cartItem.item.id === addCartItem.item.id)
+      if (cartItem) {
+        cartItem.quantity += addCartItem.quantity
+        return
       }
-      console.log(JSON.stringify(addCartItem))
+
       this.customer.cartItems.push(addCartItem);
     },
 
@@ -90,9 +105,8 @@ export default {
       .then(function (response) {
         items = response.data
       })
-      this.items = items
 
-      for (let item of this.items) {
+      for (let item of items) {
 
         // 画像をBase64デコード
         item.image = await this.base64DecodeAsBlob(item.image, item.imageType)
@@ -115,10 +129,11 @@ export default {
       }
 
       return URL.createObjectURL(image)
-    }
-  }
+    },
+  },
 };
 </script>
+
 <style>
 img {
   width: 17rem;

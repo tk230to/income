@@ -92,8 +92,7 @@ export default {
     // ========================================================================
     logoff: function() {
       firebase.auth().signOut();
-      let customer = {}
-      this.setCustomer(customer)
+      this.customer = {}
       this.$router.push("/login");
     },
 
@@ -113,7 +112,7 @@ export default {
       } else {
         return "";
       }
-    }
+    },
   },
 
   // **************************************************************************
@@ -129,15 +128,28 @@ export default {
   // * 算出プロパティ
   // **************************************************************************
   computed: {
+
+    // ========================================================================
+    // 顧客
+    // ========================================================================
+    customer: {
+      get () {
+        return this.$store.state.customer
+      },
+      set (value) {
+        this.$store.commit('setCustomer', value)
+      }
+    },
+
     // ========================================================================
     // カート内商品数取得
     // ========================================================================
     getCartItemCount: function() {
-      if (this.$store.state.customer.cartItems) {
-        return this.$store.state.customer.cartItems.length;
+      if (this.customer.cartItems) {
+        return this.customer.cartItems.length;
       }
       return 0
-    }
-  }
+    },
+  },
 };
 </script>

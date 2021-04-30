@@ -18,30 +18,17 @@ export default new Vuex.Store({
   // * mutations
   // **************************************************************************
   mutations: {
-
     setCustomer(state, customer) {
       state.customer = customer
     },
-
-    getCustomer(state) {
-      return state.customer
-    },
   },
 
   // **************************************************************************
-  // * actions
+  // * getter
   // **************************************************************************
-  actions: {
-
-    setCustomer({commit}, customer) {
-      commit('setCustomer', customer)
-    },
-
-    getCustomer({commit}) {
-      commit('getCustomer')
+  getters: {
+    customer: state => {
+      return state.customer
     }
   },
-
-  modules: {
-  }
 })
