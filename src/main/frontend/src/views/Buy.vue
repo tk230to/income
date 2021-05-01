@@ -70,14 +70,8 @@ export default {
 
       this.mergeCart(addCartItem)
 
-      // TODO 画像がいつの間にかBLOBになってしまうため除去
-      let customer = JSON.parse(JSON.stringify(this.customer))
-      for (let cartItem of customer.cartItems) {
-        cartItem.item.image = ""
-      }
-
       // HTTPリクエスト送信
-      await axios.post('/api/open/customers/', customer)
+      await axios.post('/api/open/customers/', this.customer)
       .then(response => {
         console.log(response)
         this.getCurrentCustomer()
@@ -108,6 +102,7 @@ export default {
         items = response.data
       })
 
+      this.cartItems = []
       for (let item of items) {
 
         // カート用に変換

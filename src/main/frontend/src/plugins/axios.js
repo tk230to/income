@@ -8,6 +8,8 @@ export default function setup() {
   // ========================================================================
   axios.interceptors.request.use(
     async request => {
+
+      request.data = await deepClone(request.data)
       await encodeImage(request.data)
 
       const token = store.state.customer.token;
@@ -50,14 +52,14 @@ async function encodeImage(data) {
   if (typeof data === 'object') {
    if (Array.isArray(data)) {
      for (let element of data) {
-       encodeImage(element)
+       await encodeImage(element)
      }
    } else {
      for (let key in data) {
        if (key === "image") {
          data.image = await base64Encode(data.image)
        }
-       encodeImage(data[key])
+       await encodeImage(data[key])
      }
    }
   }
@@ -89,14 +91,14 @@ async function decodeImage(data) {
   if (typeof data === 'object') {
     if (Array.isArray(data)) {
       for (let element of data) {
-        decodeImage(element)
+        await decodeImage(element)
       }
     } else {
       for (let key in data) {
         if (key === "image") {
           data.image = await base64DecodeAsBlob(data.image, data.imageType)
         }
-        decodeImage(data[key])
+        await decodeImage(data[key])
       }
     }
   }
@@ -107,4 +109,22 @@ async function decodeImage(data) {
 // ========================================================================
 function base64DecodeAsBlob(text, type = "text/plain;charset=UTF-8") {
   return fetch(`data:${type};base64,` + text).then(response => response.blob());
+}
+
+// ========================================================================
+// ディープコピー
+// https://qiita.com/knhr__/items/d7de463bf9013d5d3dc0
+// ========================================================================
+async function deepClone(obj) {
+
+  const channel = new MessageChannel()
+  const inPort = channel.port1
+  const outPort = channel.port2
+
+  return new Promise(resolve => {
+    inPort.onmessage = data => {
+        resolve(data.data)
+    }
+    outPort.postMessage(obj)
+  })
 }
