@@ -71,7 +71,7 @@ export default {
       // HTTPリクエスト送信
       await axios.put('/api/open/items/' + this.item.id, this.item)
       .then(response => {
-        console.log(response)
+        this.item = response.data
         this.$router.push('/item')
       })
 
