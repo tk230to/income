@@ -59,12 +59,12 @@ public class CustomerRestController {
      */
     @PostMapping
     public ResponseEntity<Customer> create(@Validated @RequestBody Customer customer) {
-        customerRepository.save(customer);
+        customer = customerRepository.save(customer);
         return ResponseEntity.ok(customer);
     }
 
     /**
-     * 登録。
+     * チェック。
      *
      * @param customer 顧客画面入力値
      * @return 顧客情報
@@ -82,7 +82,7 @@ public class CustomerRestController {
      */
     @PutMapping(value = "/{id}")
     public ResponseEntity<Customer> update(@Validated @RequestBody Customer customer) {
-        customerRepository.save(customer);
+        customer = customerRepository.save(customer);
         return ResponseEntity.ok(customer);
     }
 

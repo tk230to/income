@@ -61,7 +61,7 @@ public class ItemRestController {
      */
     @PostMapping
     public ResponseEntity<Item> create(@Valid @RequestBody Item item) {
-        ItemRepository.save(item);
+        item = ItemRepository.save(item);
         return ResponseEntity.ok(item);
     }
 
@@ -72,9 +72,9 @@ public class ItemRestController {
      * @return 商品情報
      */
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Item> update(@Validated @RequestBody Item Item) {
-        ItemRepository.save(Item);
-        return ResponseEntity.ok(Item);
+    public ResponseEntity<Item> update(@Validated @RequestBody Item item) {
+        item = ItemRepository.save(item);
+        return ResponseEntity.ok(item);
     }
 
     /**

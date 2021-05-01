@@ -61,7 +61,7 @@ public class CartItemRestController {
      */
     @PostMapping
     public ResponseEntity<CartItem> create(@Valid @RequestBody CartItem cartItem) {
-        cartItemRepository.save(cartItem);
+        cartItem = cartItemRepository.save(cartItem);
         return ResponseEntity.ok(cartItem);
     }
 
@@ -73,7 +73,7 @@ public class CartItemRestController {
      */
     @PutMapping(value = "/{id}")
     public ResponseEntity<CartItem> update(@Validated @RequestBody CartItem cartItem) {
-        cartItemRepository.save(cartItem);
+        cartItem = cartItemRepository.save(cartItem);
         return ResponseEntity.ok(cartItem);
     }
 

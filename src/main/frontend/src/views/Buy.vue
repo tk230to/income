@@ -73,8 +73,7 @@ export default {
       // HTTPリクエスト送信
       await axios.post('/api/open/customers/', this.customer)
       .then(response => {
-        console.log(response)
-        this.getCurrentCustomer()
+        this.customer = response.data
       })
     },
 

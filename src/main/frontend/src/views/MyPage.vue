@@ -58,7 +58,7 @@ export default {
     update: async function () {
       await axios.put('/api/open/customers/' + this.customer.id, this.customer)
       .then(response => {
-        console.log(response)
+        this.customer = response.data
         this.$router.push('/')
       })
 
