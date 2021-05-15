@@ -19,15 +19,30 @@
     </div>
 
     <div class="row">
-      <button @click="update()" class="btn btn-primary d-block mx-auto m-2 px-3 py-2">更新</button>
+      <div class="col-sm-6">
+        <button class="btn btn-primary" @click="cancel()">解約</button>
+      </div>
+      <div class="col-sm-6 text-right">
+        <button class="btn btn-primary" @click="update()">更新</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import firebase from "firebase/app";
 
 export default {
+
+  // **************************************************************************
+  // * データ
+  // **************************************************************************
+  data: function() {
+    return {
+      errors: null
+    }
+  },
 
   // **************************************************************************
   // * 算出プロパティ
@@ -65,6 +80,18 @@ export default {
       .catch(error => {
         this.errors = error.response.data.errors
       })
+    },
+
+    // ========================================================================
+    // 解約
+    // ========================================================================
+    cancel: async function () {
+
+      firebase.auth().currentUser.delete().then(() => {
+        // User deleted.
+      }).catch(error => {
+        console.log(error)
+      });
     },
   }
 };

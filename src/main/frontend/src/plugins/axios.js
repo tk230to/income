@@ -97,8 +97,9 @@ async function decodeImage(data) {
       for (let key in data) {
         if (key === "image") {
           data.image = await base64DecodeAsBlob(data.image, data.imageType)
+        } else {
+          await decodeImage(data[key])
         }
-        await decodeImage(data[key])
       }
     }
   }

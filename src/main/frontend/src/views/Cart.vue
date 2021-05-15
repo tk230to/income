@@ -70,7 +70,7 @@ export default {
       await axios.delete('/api/open/cartitems/' + this.customer.cartItems[index].id)
       .then(response => {
         console.log(response)
-        this.getCurrentCustomer()
+        this.getCustomer()
       })
 
       .catch(error => {

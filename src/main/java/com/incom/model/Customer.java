@@ -2,13 +2,13 @@ package com.incom.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -35,10 +35,12 @@ public class Customer {
 
     /** メールアドレス */
     @NotNull
+    @NotBlank
     private String email;
 
     /** 名前 */
     @NotNull
+    @NotBlank
     private String name;
 
     /** 権限 */
@@ -48,11 +50,6 @@ public class Customer {
     /** カート商品リスト */
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<CartItem> cartItems = new ArrayList<CartItem>();
-
-    /** カート商品リスト */
-    public List<CartItem> getCartItems() {
-        return Optional.ofNullable(this.cartItems).orElse(new ArrayList<CartItem>());
-    }
 
     /** カート商品リスト */
     public void setCartItems(List<CartItem> cartItems) {

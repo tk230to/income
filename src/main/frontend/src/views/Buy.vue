@@ -28,7 +28,7 @@ import axios from 'axios';
 export default {
   mounted: function() {
     this.getItems()
-    this.getCurrentCustomer()
+    this.getCustomer()
   },
 
   // **************************************************************************

@@ -100,18 +100,13 @@ export default {
     // ログイン有無取得
     // ========================================================================
     isLogin: function() {
-      return firebase.auth().currentUser !== null;
-    },
-
-    // ========================================================================
-    // ログイン有無取得
-    // ========================================================================
-    getEmail: function() {
-      if (firebase.auth().currentUser !== null) {
-        return firebase.auth().currentUser.email;
-      } else {
-        return "";
+      if (!firebase.auth().currentUser) {
+        return false
       }
+      if (firebase.auth().currentUser.isAnonymous) {
+        return false
+      }
+      return true;
     },
   },
 

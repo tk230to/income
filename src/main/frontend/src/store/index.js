@@ -22,13 +22,4 @@ export default new Vuex.Store({
       state.customer = customer
     },
   },
-
-  // **************************************************************************
-  // * getter
-  // **************************************************************************
-  getters: {
-    customer: state => {
-      return state.customer
-    }
-  },
 })

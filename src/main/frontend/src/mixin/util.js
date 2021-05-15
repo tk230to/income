@@ -54,17 +54,28 @@ export default {
     // ========================================================================
     // ユーザ取得
     // ========================================================================
-    getCurrentCustomer: async function() {
+    getCustomer: async function() {
 
-      let customer
+      let customer = {}
       let id
-      if (firebase.auth().currentUser) {
-        id = firebase.auth().currentUser.uid
+
+      if (!firebase.auth().currentUser) {
+        await firebase.auth().signInAnonymously()
       }
+
+      id = firebase.auth().currentUser.uid
+
       await axios.get('/api/open/customers/' + id)
       .then(function (response) {
         customer = response.data
       })
+
+      .catch((error) => {
+        if (error.response.status == 404) {
+          customer = {}
+        }
+      });
+
       this.customer = customer
 
       if (firebase.auth().currentUser) {
